@@ -48,8 +48,10 @@ export class UIManager {
       </select>
     `;
     
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'grid grid-cols-3 gap-2 mt-2';
+    buttonsContainer.className = isMobile ? 'grid grid-cols-3 gap-2 mt-2' : 'grid grid-cols-2 gap-2 mt-2';
     
     const recenterBtn = document.createElement('button');
     recenterBtn.className = 'bg-gray-800 hover:bg-gray-700 text-white text-sm py-2 px-4 rounded transition-colors border border-gray-700';
@@ -91,7 +93,9 @@ export class UIManager {
 
     buttonsContainer.appendChild(recenterBtn);
     buttonsContainer.appendChild(sbsBtn);
-    buttonsContainer.appendChild(arBtn);
+    if (isMobile) {
+      buttonsContainer.appendChild(arBtn);
+    }
 
     const sliderContainer = document.createElement('div');
     sliderContainer.className = 'flex flex-col gap-1 mt-2';
@@ -111,6 +115,12 @@ export class UIManager {
     uiLayer.appendChild(controls);
 
     this.driverSelect = document.getElementById('driver-select') as HTMLSelectElement;
+    
+    const currentName = this.deviceManager.getCurrentDriver().getDriverName();
+    if (currentName === 'PhoneOrientationDriver') this.driverSelect.value = 'phone';
+    else if (currentName === 'VitureWebHIDDriver') this.driverSelect.value = 'viture';
+    else this.driverSelect.value = 'mock';
+
     this.driverSelect.addEventListener('change', async (e) => {
       const driverName = (e.target as HTMLSelectElement).value;
       const success = await this.deviceManager.switchDriver(driverName);

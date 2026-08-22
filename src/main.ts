@@ -9,7 +9,13 @@ async function bootstrap() {
 
   const deviceManager = new DeviceManager();
   
-  await deviceManager.getCurrentDriver().connect();
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Note: switchDriver handles connecting
+    await deviceManager.switchDriver('phone');
+  } else {
+    await deviceManager.getCurrentDriver().connect();
+  }
   
   const scene = new SpatialScene(appContainer, deviceManager);
   
