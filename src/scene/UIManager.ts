@@ -37,18 +37,27 @@ export class UIManager {
     const controls = document.createElement('div');
     controls.className = 'pointer-events-auto self-center bg-gray-900/60 backdrop-blur-md border border-gray-700/50 p-6 rounded-2xl shadow-2xl flex flex-col gap-4 w-96';
     
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     const selectContainer = document.createElement('div');
     selectContainer.className = 'flex flex-col gap-2';
+    
+    const optionsHTML = isMobile 
+      ? `
+        <option value="phone">Phone IMU (Sensors)</option>
+        <option value="viture">VITURE AR (WebHID)</option>
+      `
+      : `
+        <option value="mock">Simulated (Mouse)</option>
+        <option value="viture">VITURE AR (WebHID)</option>
+      `;
+
     selectContainer.innerHTML = `
       <span class="text-sm font-medium text-gray-200">Input Source</span>
       <select id="driver-select" class="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none">
-        <option value="mock">Simulated (Mouse)</option>
-        <option value="phone">Phone IMU (Sensors)</option>
-        <option value="viture">VITURE AR (WebHID)</option>
+        ${optionsHTML}
       </select>
     `;
-    
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     const buttonsContainer = document.createElement('div');
     buttonsContainer.className = isMobile ? 'grid grid-cols-3 gap-2 mt-2' : 'grid grid-cols-2 gap-2 mt-2';
